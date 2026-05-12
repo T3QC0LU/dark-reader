@@ -58,6 +58,10 @@ export function remap(entries: ColorEntry[], brightness = 100): string {
     `  color: rgb(${v}, ${v}, ${v}) !important;`,
     `  border-color: #1a1a1a !important;`,
     `}`,
+    `img, video, canvas, picture, svg, iframe {`,
+    `  background-color: initial !important;`,
+    `  filter: none !important;`,
+    `}`,
   ];
 
   entries.forEach((entry, idx) => {

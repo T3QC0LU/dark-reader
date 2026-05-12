@@ -5,13 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dark Reader</title>
   <style>
-    body { width: 280px; min-height: 120px; background: #000; color: #e8e8e8;
-           font-family: system-ui, sans-serif; margin: 0; padding: 16px; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { width: 280px; background: #000; color: #e8e8e8;
+           font-family: system-ui, sans-serif; padding: 16px; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .toggle input { display: none; }
+    .toggle .slider { display: inline-block; width: 36px; height: 20px; background: #333;
+                      border-radius: 10px; cursor: pointer; transition: background .2s; }
+    .toggle input:checked + .slider { background: #4a9eff; }
+    .status { font-size: 12px; color: #888; margin-bottom: 12px; }
+    .controls { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+    .controls label { display: flex; justify-content: space-between; align-items: center; }
+    .controls input[type="range"] { width: 120px; }
+    button { background: #1a1a1a; color: #e8e8e8; border: 1px solid #333;
+             border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 11px; }
+    button:hover { background: #2a2a2a; }
   </style>
 </head>
 <body>
-  <h1 style="font-size:14px;margin:0 0 12px">Dark Reader 🌑</h1>
-  <p style="font-size:12px;color:#666">Loading…</p>
-  <script type="module" src="./index.ts"></script>
+  <div id="root"></div>
+  <script type="module">
+    import { initPopup } from "./index.ts";
+    import { getGlobalEnabled, setGlobalEnabled, getConfig, setConfig } from "../modules/SiteConfigStore.ts";
+    initPopup(document.getElementById("root"), {
+      getGlobalEnabled,
+      setGlobalEnabled,
+      queryActiveTab: () => new Promise(resolve =>
+        chrome.tabs.query({ active: true, currentWindow: true }, ([tab]) => resolve(tab ?? {}))
+      ),
+      getConfig,
+      setConfig,
+    });
+  </script>
 </body>
 </html>
