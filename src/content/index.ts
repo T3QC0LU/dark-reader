@@ -1,5 +1,11 @@
+import { analyze } from "../modules/ColorAnalyzer";
+import { remap } from "../modules/ColorMapper";
+import { inject } from "../modules/CSSInjector";
+
 export function run(): void {
-  // Phase 0: stub — pipeline wired in S2a
+  const entries = analyze(document.documentElement);
+  const css = remap(entries);
+  inject(css);
 }
 
 run();
