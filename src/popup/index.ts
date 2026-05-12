@@ -9,8 +9,13 @@ export interface PopupDeps {
 }
 
 export async function initPopup(root: HTMLElement, deps: PopupDeps): Promise<void> {
-  const tab = await deps.queryActiveTab();
-  const origin = tab.url ? new URL(tab.url).origin : "";
+  let origin = "";
+  try {
+    const tab = await deps.queryActiveTab();
+    origin = tab.url ? new URL(tab.url).origin : "";
+  } catch {
+    // queryActiveTab unavailable (e.g. restricted pages) — proceed with empty origin
+  }
   const [enabled, config] = await Promise.all([
     deps.getGlobalEnabled(),
     deps.getConfig(origin),

@@ -6,7 +6,8 @@ export function inject(css: string): void {
   const style = document.createElement("style");
   style.setAttribute(TAG_ATTR, "");
   style.textContent = css;
-  document.head.appendChild(style);
+  // document.head is null at document_start — fall back to documentElement
+  (document.head ?? document.documentElement).appendChild(style);
 }
 
 /** Remove the dark-reader <style> tag if present. */

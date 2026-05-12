@@ -141,3 +141,17 @@ describe("Color Pipeline integration", () => {
     document.body.removeChild(div);
   });
 });
+
+// ─── Regression: inject at document_start (document.head may be null) ─────
+
+describe("CSSInjector — document_start safety", () => {
+  it("inject() works when document.head is null (document_start)", async () => {
+    const { inject } = await import("../src/modules/CSSInjector");
+    // Simulate document.head being null
+    const origHead = document.head;
+    Object.defineProperty(document, "head", { value: null, configurable: true });
+    expect(() => inject("body { background: #000; }")).not.toThrow();
+    // Restore
+    Object.defineProperty(document, "head", { value: origHead, configurable: true });
+  });
+});
